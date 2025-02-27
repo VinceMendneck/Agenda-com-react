@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import variaveis from '../../styles/variaveis'
 import * as enums from '../../utils/enums/Tarefa'
+import { Botao } from '../../styles'
 
 type TagProps = {
   prioridade?: enums.Prioridade
@@ -26,12 +27,21 @@ export const Card = styled.div`
   padding: 16px;
   margin-bottom: 32px;
   border-radius: 16px;
+
+  label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
 `
 
 export const Titulo = styled.h3`
   font-weight: bold;
   font-size: 18px;
-  margin-bottom: 16px;
+  margin-left: 8px;
+  @media (max-width: 600px) {
+    font-size: 13px;
+  }
 `
 
 export const Tag = styled.span<TagProps>`
@@ -43,6 +53,10 @@ export const Tag = styled.span<TagProps>`
   border-radius: 8px;
   margin-right: 8px;
   display: inline-block;
+  @media (max-width: 600px) {
+    font-size: 9px;
+    padding: 4px 6px;
+  }
 `
 
 export const Descricao = styled.textarea`
@@ -57,6 +71,9 @@ export const Descricao = styled.textarea`
   resize: none;
   border: none;
   background-color: transparent;
+  @media (max-width: 600px) {
+    font-size: 12px;
+  }
 `
 
 export const BarraAcoes = styled.div`
@@ -64,21 +81,10 @@ export const BarraAcoes = styled.div`
   padding-top: 16px;
 `
 
-export const Botao = styled.button`
-  font-size: 12px;
-  color: #fff;
-  font-weight: bold;
-  padding: 8px 12px;
-  border: none;
-  cursor: pointer;
-  background-color: #2f3640;
-  border-radius: 8px;
-  margin-right: 8px;
-`
-
-export const BotaoSalvar = styled(Botao)`
-  background-color: ${variaveis.verde};
-`
 export const BotaoCancelarRemover = styled(Botao)`
   background-color: ${variaveis.vermelho};
+  @media (max-width: 600px) {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
 `
