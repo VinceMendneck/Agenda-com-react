@@ -1,65 +1,49 @@
 import styled from 'styled-components'
 import variaveis from '../../styles/variaveis'
-import * as enums from '../../utils/enums/Contato'
 import { Botao } from '../../styles'
 
-type TagProps = {
-  prioridade?: enums.Prioridade
-  status?: enums.Status
-  parametro: 'status' | 'prioridade'
-}
-
-function retornaCorDeFundo(props: TagProps): string {
-  if (props.parametro === 'prioridade') {
-    if (props.prioridade === enums.Prioridade.URGENTE) return variaveis.vermelho
-    if (props.prioridade === enums.Prioridade.IMPORTANTE)
-      return variaveis.amarelo2
-  } else {
-    if (props.status === enums.Status.PENDENTE) return variaveis.amarelo
-    if (props.status === enums.Status.CONCLUIDA) return variaveis.verde
-  }
-  return '#ccc'
-}
-
+// Estiliza o card de cada contato
 export const Card = styled.div`
   background-color: #fcfcfc;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   padding: 16px;
   margin-bottom: 32px;
   border-radius: 16px;
-
-  label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
+  @media (max-width: 600px) {
+    padding: 16px;
+    margin: 8px;
   }
 `
 
+// Estiliza o nome do contato como título
 export const Titulo = styled.h3`
   font-weight: bold;
   font-size: 18px;
-  margin-left: 8px;
+  margin-bottom: 8px;
   @media (max-width: 600px) {
     font-size: 13px;
   }
 `
 
-export const Tag = styled.span<TagProps>`
-  padding: 4px 8px;
-  font-size: 10px;
+// Estiliza a etiqueta do contato
+export const Etiqueta = styled.div<{ editavel: boolean }>`
+  font-size: 12px;
   font-weight: bold;
-  color: #fff;
-  background-color: ${(props) => retornaCorDeFundo(props)};
-  border-radius: 8px;
-  margin-right: 8px;
-  display: inline-block;
-  @media (max-width: 600px) {
-    font-size: 9px;
-    padding: 4px 6px;
+  color: #5e5e5e;
+  margin-bottom: 16px;
+  select {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #5e5e5e;
+    background-color: #fff;
   }
 `
 
-export const Descricao = styled.textarea`
+// Estiliza os campos de email e telefone
+export const Descricao = styled.input`
   color: #8b8b8b;
   font-size: 14px;
   line-height: 24px;
@@ -67,20 +51,25 @@ export const Descricao = styled.textarea`
   display: block;
   width: 100%;
   margin-bottom: 16px;
-  margin-top: 16px;
-  resize: none;
-  border: none;
-  background-color: transparent;
+  border: 1px solid ${(props) => (props.disabled ? 'transparent' : '#ccc')};
+  border-radius: 4px;
+  padding: 8px;
+  background-color: ${(props) => (props.disabled ? 'transparent' : '#fff')};
   @media (max-width: 600px) {
-    font-size: 12px;
+    font-size: 11px;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 0;
   }
 `
 
+// Estiliza a barra de ações
 export const BarraAcoes = styled.div`
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding-top: 16px;
 `
 
+// Estiliza o botão de cancelar ou remover
 export const BotaoCancelarRemover = styled(Botao)`
   background-color: ${variaveis.vermelho};
   @media (max-width: 600px) {

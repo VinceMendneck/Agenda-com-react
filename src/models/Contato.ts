@@ -1,24 +1,22 @@
-import * as enums from '../utils/enums/Contato'
-
 class Contato {
-  titulo: string
-  prioridade: enums.Prioridade
-  status: enums.Status
-  descricao: string
+  nome: string
+  email: string
+  telefone: string
   id: number
+  etiqueta: string
 
   constructor(
-    titulo: string,
-    prioridade: enums.Prioridade,
-    status: enums.Status,
-    descricao: string,
-    id: number
+    nome: string,
+    email: string,
+    telefone: string,
+    id: number,
+    etiqueta: string
   ) {
-    this.titulo = titulo
-    this.prioridade = prioridade
-    this.status = status
-    this.descricao = descricao
+    this.nome = nome
+    this.email = email
+    this.telefone = telefone
     this.id = id
+    this.etiqueta = etiqueta
   }
 }
 

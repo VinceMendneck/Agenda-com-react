@@ -1,32 +1,23 @@
 import styled from 'styled-components'
 
+// Estiliza o formulário
 export const Form = styled.form`
   max-width: 547px;
   width: 100%;
-  font-size: 14px;
   font-weight: bold;
-
-  textarea {
-    resize: none;
-    margin: 16px 0;
-  }
+  font-size: 14px;
+  color: #5e5e5e;
 `
 
-export const Opcoes = styled.div`
+// Estiliza o select de etiquetas
+export const SelectEtiqueta = styled.select`
+  padding: 8px;
+  background-color: #fcfcfc;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #5e5e5e;
+  border: 1.5px solid #a1a1a1;
+  width: 100%;
   margin-bottom: 16px;
-
-  p {
-    margin-bottom: 6px;
-  }
-
-  label {
-    margin-right: 6px;
-  }
-`
-export const Opcao = styled.div`
-  display: inline;
-  text-transform: capitalize;
-  @media (max-width: 600px) {
-    display: block;
-  }
+  font-size: 14px;
 `

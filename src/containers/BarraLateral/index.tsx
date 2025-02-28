@@ -1,12 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux'
 import FiltroCard from '../../components/FiltroCard'
 import * as S from './styles'
-import { Botao, Campo } from '../../styles'
+import { Botao, BotaoSalvar, Campo } from '../../styles'
 import { RootReducer } from '../../store'
-import { alterarTermo } from '../../store/reducers/filtro'
-import * as enums from '../../utils/enums/Contato'
+import {
+  alterarTermo,
+  adicionarEtiqueta,
+  editarEtiqueta,
+  removerEtiqueta
+} from '../../store/reducers/filtro'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { BotaoCancelarRemover } from '../../components/Contato/styles'
 
 type Props = {
   mostrarFiltros: boolean
@@ -27,17 +32,44 @@ const useMediaQuery = (query: string) => {
   return matches
 }
 
+// Componente da barra lateral com pesquisa e filtros de etiquetas
 const BarraLateral = ({ mostrarFiltros }: Props) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { termo } = useSelector((state: RootReducer) => state.filtro)
+  const { termo, etiquetas } = useSelector((state: RootReducer) => state.filtro)
+  const [novaEtiqueta, setNovaEtiqueta] = useState('')
+  const [editandoEtiqueta, setEditandoEtiqueta] = useState<string | null>(null)
+  const [valorEdicao, setValorEdicao] = useState('')
 
-  // Usa o hook para verificar se a tela é menor ou igual a 600px
   const isMobile = useMediaQuery('(max-width: 600px)')
-
-  // Define o texto do botão com base no tamanho da tela
   const textoBotao = isMobile ? 'Voltar' : 'Voltar a lista de contatos'
 
+  // Adiciona uma nova etiqueta ao estado
+  const handleAdicionarEtiqueta = () => {
+    if (novaEtiqueta.trim()) {
+      dispatch(adicionarEtiqueta(novaEtiqueta.trim()))
+      setNovaEtiqueta('')
+    }
+  }
+
+  // Inicia a edição de uma etiqueta existente
+  const handleEditarEtiqueta = (etiqueta: string) => {
+    setEditandoEtiqueta(etiqueta)
+    setValorEdicao(etiqueta)
+  }
+
+  // Salva a edição de uma etiqueta
+  const handleSalvarEdicao = (etiquetaOriginal: string) => {
+    if (valorEdicao.trim()) {
+      dispatch(
+        editarEtiqueta({ original: etiquetaOriginal, novo: valorEdicao.trim() })
+      )
+      setEditandoEtiqueta(null)
+      setValorEdicao('')
+    }
+  }
+
+  // Renderiza a barra lateral com filtros e gerenciamento de etiquetas
   return (
     <S.Aside>
       <div>
@@ -50,33 +82,56 @@ const BarraLateral = ({ mostrarFiltros }: Props) => {
               onChange={(evento) => dispatch(alterarTermo(evento.target.value))}
             />
             <S.Filtros>
-              <FiltroCard
-                valor={enums.Status.PENDENTE}
-                criterio="status"
-                legenda="Pendentes"
-              />
-              <FiltroCard
-                valor={enums.Status.CONCLUIDA}
-                criterio="status"
-                legenda="Concluídas"
-              />
-              <FiltroCard
-                valor={enums.Prioridade.URGENTE}
-                criterio="prioridade"
-                legenda="Urgentes"
-              />
-              <FiltroCard
-                valor={enums.Prioridade.IMPORTANTE}
-                criterio="prioridade"
-                legenda="Importantes"
-              />
-              <FiltroCard
-                valor={enums.Prioridade.NORMAL}
-                criterio="prioridade"
-                legenda="Normal"
-              />
-              <FiltroCard criterio="todas" legenda="Todas" />
+              {etiquetas.map((etiqueta) => (
+                <S.EtiquetaContainer key={etiqueta}>
+                  {editandoEtiqueta === etiqueta ? (
+                    <S.EditarContainer>
+                      <Campo
+                        value={valorEdicao}
+                        onChange={(e) => setValorEdicao(e.target.value)}
+                      />
+                      <BotaoSalvar onClick={() => handleSalvarEdicao(etiqueta)}>
+                        Salvar
+                      </BotaoSalvar>
+                      <BotaoCancelarRemover
+                        onClick={() => setEditandoEtiqueta(null)}
+                      >
+                        Cancelar
+                      </BotaoCancelarRemover>
+                    </S.EditarContainer>
+                  ) : (
+                    <>
+                      <FiltroCard
+                        criterio="com-etiqueta"
+                        valor={etiqueta}
+                        legenda={etiqueta}
+                      />
+                      <S.BotoesEtiqueta>
+                        <Botao onClick={() => handleEditarEtiqueta(etiqueta)}>
+                          Editar
+                        </Botao>
+                        <BotaoCancelarRemover
+                          onClick={() => dispatch(removerEtiqueta(etiqueta))}
+                        >
+                          Remover
+                        </BotaoCancelarRemover>
+                      </S.BotoesEtiqueta>
+                    </>
+                  )}
+                </S.EtiquetaContainer>
+              ))}
             </S.Filtros>
+            <FiltroCard criterio="todos" legenda="Todos" />
+            <S.AdicionarContainer>
+              <Campo
+                value={novaEtiqueta}
+                onChange={(e) => setNovaEtiqueta(e.target.value)}
+                placeholder="Nova etiqueta"
+              />
+              <BotaoSalvar onClick={handleAdicionarEtiqueta}>
+                Adicionar
+              </BotaoSalvar>
+            </S.AdicionarContainer>
           </>
         ) : (
           <Botao onClick={() => navigate('/')}>{textoBotao}</Botao>

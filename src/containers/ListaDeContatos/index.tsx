@@ -3,48 +3,46 @@ import Contato from '../../components/Contato'
 import { MainContainer, Titulo } from '../../styles'
 import { RootReducer } from '../../store'
 
+// Componente que exibe a lista de contatos com filtros aplicados
 const ListaDeContatos = () => {
   const { itens } = useSelector((state: RootReducer) => state.contatos)
   const { termo, criterio, valor } = useSelector(
     (state: RootReducer) => state.filtro
   )
 
+  // Filtra os contatos com base no termo de busca e no critério
   const filtraContatos = () => {
-    let cotatosFiltrados = itens
-    if (termo !== undefined) {
-      cotatosFiltrados = cotatosFiltrados.filter(
-        (item) => item.titulo.toLowerCase().search(termo.toLowerCase()) >= 0
+    let contatosFiltrados = itens
+    if (termo) {
+      contatosFiltrados = contatosFiltrados.filter(
+        (item) =>
+          item.nome.toLowerCase().search(termo.toLowerCase()) >= 0 ||
+          item.email.toLowerCase().search(termo.toLowerCase()) >= 0 ||
+          item.telefone.toLowerCase().search(termo.toLowerCase()) >= 0
       )
-
-      if (criterio === 'prioridade') {
-        cotatosFiltrados = cotatosFiltrados.filter(
-          (item) => item.prioridade === valor
-        )
-      } else if (criterio === 'status') {
-        cotatosFiltrados = cotatosFiltrados.filter(
-          (item) => item.status === valor
-        )
-      }
-      return cotatosFiltrados
-    } else {
-      return itens
     }
+    if (criterio === 'com-etiqueta' && valor) {
+      contatosFiltrados = contatosFiltrados.filter(
+        (item) => item.etiqueta === valor // Supondo que o modelo de contato tenha um campo "etiqueta"
+      )
+    }
+    return contatosFiltrados
   }
 
+  // Gera a mensagem de resultado da filtragem
   const exibeResultadoFiltragem = (quantidade: number) => {
     let mensagem = ''
-    const complementacao =
-      termo !== undefined && termo.length > 0 ? `e "${termo}"` : ''
+    const complementacao = termo ? ` e "${termo}"` : ''
 
-    if (criterio === 'todas') {
+    if (criterio === 'todos') {
       mensagem = `${quantidade} contato(s) encontrado(s)`
-    } else {
-      mensagem = `${quantidade} contato(s) encontrado(s) com ${`${criterio} ${valor}`} ${complementacao}`
+    } else if (criterio === 'com-etiqueta' && valor) {
+      mensagem = `${quantidade} contato(s) encontrado(s) com etiqueta "${valor}"${complementacao}`
     }
-
     return mensagem
   }
 
+  // Renderiza a lista de contatos filtrados
   const contatos = filtraContatos()
   const mensagem = exibeResultadoFiltragem(contatos.length)
 
@@ -53,13 +51,13 @@ const ListaDeContatos = () => {
       <Titulo as="p">{mensagem}</Titulo>
       <ul>
         {contatos.map((c) => (
-          <li key={c.titulo}>
+          <li key={c.id}>
             <Contato
               id={c.id}
-              descricao={c.descricao}
-              titulo={c.titulo}
-              status={c.status}
-              prioridade={c.prioridade}
+              nome={c.nome}
+              email={c.email}
+              telefone={c.telefone}
+              etiqueta={c.etiqueta}
             />
           </li>
         ))}

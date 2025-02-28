@@ -1,58 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import Contato from '../../models/Contato'
-import * as enums from '../../utils/enums/Contato'
 
+// Define o estado da lista de contatos
 type ContatosState = {
   itens: Contato[]
 }
 
+// Estado inicial com exemplos de contatos
 const initialState: ContatosState = {
   itens: [
-    {
-      id: 1,
-      descricao: 'Exemplo de descrição de tarefa normal concluída',
-      prioridade: enums.Prioridade.NORMAL,
-      status: enums.Status.CONCLUIDA,
-      titulo: 'Exemplo de tarefa normal concluída'
-    },
-    {
-      id: 2,
-      descricao: 'Exemplo de descrição de tarefa importante concluída',
-      prioridade: enums.Prioridade.IMPORTANTE,
-      status: enums.Status.CONCLUIDA,
-      titulo: 'Exemplo de tarefa importante concluída'
-    },
-    {
-      id: 3,
-      descricao: 'Exemplo de descrição de tarefa urgente concluída',
-      prioridade: enums.Prioridade.URGENTE,
-      status: enums.Status.CONCLUIDA,
-      titulo: 'Exemplo de tarefa urgente concluída'
-    },
-    {
-      id: 4,
-      descricao: 'Exemplo de descrição de tarefa normal pendente',
-      prioridade: enums.Prioridade.NORMAL,
-      status: enums.Status.PENDENTE,
-      titulo: 'Exemplo de tarefa normal pendente'
-    },
-    {
-      id: 5,
-      descricao: 'Exemplo de descrição de tarefa importante pendente',
-      prioridade: enums.Prioridade.IMPORTANTE,
-      status: enums.Status.PENDENTE,
-      titulo: 'Exemplo de tarefa importante pendente'
-    },
-    {
-      id: 6,
-      descricao: 'Exemplo de descrição de tarefa urgente pendente',
-      prioridade: enums.Prioridade.URGENTE,
-      status: enums.Status.PENDENTE,
-      titulo: 'Exemplo de tarefa urgente pendente'
-    }
+    new Contato(
+      'João Silva',
+      'joao.silva@email.com',
+      '(11) 99999-9999',
+      1,
+      'Amigos'
+    ),
+    new Contato(
+      'Maria Oliveira',
+      'maria.oliveira@email.com',
+      '(21) 98888-8888',
+      2,
+      'Trabalho'
+    ),
+    new Contato(
+      'Pedro Souza',
+      'pedro.souza@email.com',
+      '(31) 97777-7777',
+      3,
+      'Família'
+    )
   ]
 }
 
+// Slice do Redux para gerenciar os contatos
 const contatosSlice = createSlice({
   name: 'contatos',
   initialState,
@@ -66,7 +47,6 @@ const contatosSlice = createSlice({
       const indexDoContato = state.itens.findIndex(
         (c) => c.id === action.payload.id
       )
-
       if (indexDoContato >= 0) {
         state.itens[indexDoContato] = action.payload
       }
@@ -74,31 +54,20 @@ const contatosSlice = createSlice({
     cadastrar: (state, action: PayloadAction<Omit<Contato, 'id'>>) => {
       const contatoJaExiste = state.itens.find(
         (contato) =>
-          contato.titulo.toLowerCase() === action.payload.titulo.toLowerCase()
+          contato.nome.toLowerCase() === action.payload.nome.toLowerCase()
       )
       if (contatoJaExiste) {
         alert('Contato já existente')
       } else {
         const ultimoContato = state.itens[state.itens.length - 1]
-        const contatoNovo = {
-          ...action.payload,
-          id: ultimoContato ? ultimoContato.id + 1 : 1
-        }
+        const contatoNovo = new Contato(
+          action.payload.nome,
+          action.payload.email,
+          action.payload.telefone,
+          ultimoContato ? ultimoContato.id + 1 : 1,
+          action.payload.etiqueta
+        )
         state.itens.push(contatoNovo)
-      }
-    },
-    alteraStatus: (
-      state,
-      action: PayloadAction<{ id: number; finalizado: boolean }>
-    ) => {
-      const indexDoContato = state.itens.findIndex(
-        (c) => c.id === action.payload.id
-      )
-
-      if (indexDoContato >= 0) {
-        state.itens[indexDoContato].status = action.payload.finalizado
-          ? enums.Status.CONCLUIDA
-          : enums.Status.PENDENTE
       }
     }
   }
@@ -107,5 +76,4 @@ const contatosSlice = createSlice({
 export const { remover } = contatosSlice.actions
 export const { editar } = contatosSlice.actions
 export const { cadastrar } = contatosSlice.actions
-export const { alteraStatus } = contatosSlice.actions
 export default contatosSlice.reducer
