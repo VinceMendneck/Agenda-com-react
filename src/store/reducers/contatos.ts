@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import Tarefa from '../../models/Tarefa'
-import * as enums from '../../utils/enums/Tarefa'
+import Contato from '../../models/Contato'
+import * as enums from '../../utils/enums/Contato'
 
-type TarefasState = {
-  itens: Tarefa[]
+type ContatosState = {
+  itens: Contato[]
 }
 
-const initialState: TarefasState = {
+const initialState: ContatosState = {
   itens: [
     {
       id: 1,
@@ -53,48 +53,50 @@ const initialState: TarefasState = {
   ]
 }
 
-const tarefasSlice = createSlice({
-  name: 'tarefas',
+const contatosSlice = createSlice({
+  name: 'contatos',
   initialState,
   reducers: {
     remover: (state, action: PayloadAction<number>) => {
-      state.itens = state.itens.filter((tarefa) => tarefa.id !== action.payload)
+      state.itens = state.itens.filter(
+        (contato) => contato.id !== action.payload
+      )
     },
-    editar: (state, action: PayloadAction<Tarefa>) => {
-      const indexDaTarefa = state.itens.findIndex(
-        (t) => t.id === action.payload.id
+    editar: (state, action: PayloadAction<Contato>) => {
+      const indexDoContato = state.itens.findIndex(
+        (c) => c.id === action.payload.id
       )
 
-      if (indexDaTarefa >= 0) {
-        state.itens[indexDaTarefa] = action.payload
+      if (indexDoContato >= 0) {
+        state.itens[indexDoContato] = action.payload
       }
     },
-    cadastrar: (state, action: PayloadAction<Omit<Tarefa, 'id'>>) => {
-      const tarefaJaExiste = state.itens.find(
-        (tarefa) =>
-          tarefa.titulo.toLowerCase() === action.payload.titulo.toLowerCase()
+    cadastrar: (state, action: PayloadAction<Omit<Contato, 'id'>>) => {
+      const contatoJaExiste = state.itens.find(
+        (contato) =>
+          contato.titulo.toLowerCase() === action.payload.titulo.toLowerCase()
       )
-      if (tarefaJaExiste) {
-        alert('Tarefa já existente')
+      if (contatoJaExiste) {
+        alert('Contato já existente')
       } else {
-        const ultimaTarefa = state.itens[state.itens.length - 1]
-        const tarefaNova = {
+        const ultimoContato = state.itens[state.itens.length - 1]
+        const contatoNovo = {
           ...action.payload,
-          id: ultimaTarefa ? ultimaTarefa.id + 1 : 1
+          id: ultimoContato ? ultimoContato.id + 1 : 1
         }
-        state.itens.push(tarefaNova)
+        state.itens.push(contatoNovo)
       }
     },
     alteraStatus: (
       state,
       action: PayloadAction<{ id: number; finalizado: boolean }>
     ) => {
-      const indexDaTarefa = state.itens.findIndex(
-        (t) => t.id === action.payload.id
+      const indexDoContato = state.itens.findIndex(
+        (c) => c.id === action.payload.id
       )
 
-      if (indexDaTarefa >= 0) {
-        state.itens[indexDaTarefa].status = action.payload.finalizado
+      if (indexDoContato >= 0) {
+        state.itens[indexDoContato].status = action.payload.finalizado
           ? enums.Status.CONCLUIDA
           : enums.Status.PENDENTE
       }
@@ -102,8 +104,8 @@ const tarefasSlice = createSlice({
   }
 })
 
-export const { remover } = tarefasSlice.actions
-export const { editar } = tarefasSlice.actions
-export const { cadastrar } = tarefasSlice.actions
-export const { alteraStatus } = tarefasSlice.actions
-export default tarefasSlice.reducer
+export const { remover } = contatosSlice.actions
+export const { editar } = contatosSlice.actions
+export const { cadastrar } = contatosSlice.actions
+export const { alteraStatus } = contatosSlice.actions
+export default contatosSlice.reducer

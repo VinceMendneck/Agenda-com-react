@@ -4,7 +4,7 @@ import * as S from './styles'
 import { Botao, Campo } from '../../styles'
 import { RootReducer } from '../../store'
 import { alterarTermo } from '../../store/reducers/filtro'
-import * as enums from '../../utils/enums/Tarefa'
+import * as enums from '../../utils/enums/Contato'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
@@ -36,7 +36,7 @@ const BarraLateral = ({ mostrarFiltros }: Props) => {
   const isMobile = useMediaQuery('(max-width: 600px)')
 
   // Define o texto do botão com base no tamanho da tela
-  const textoBotao = isMobile ? 'Voltar' : 'Voltar a lista de tarefas'
+  const textoBotao = isMobile ? 'Voltar' : 'Voltar a lista de contatos'
 
   return (
     <S.Aside>

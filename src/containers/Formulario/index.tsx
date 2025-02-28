@@ -3,8 +3,8 @@ import { BotaoSalvar, MainContainer, Titulo } from '../../styles'
 import { Campo } from '../../styles'
 import { Form, Opcao, Opcoes } from './styles'
 import { useDispatch } from 'react-redux'
-import * as enums from '../../utils/enums/Tarefa'
-import { cadastrar } from '../../store/reducers/tarefas'
+import * as enums from '../../utils/enums/Contato'
+import { cadastrar } from '../../store/reducers/contatos'
 import { useNavigate } from 'react-router-dom'
 
 const Formulario = () => {
@@ -14,7 +14,7 @@ const Formulario = () => {
   const [descricao, setDescricao] = useState('')
   const [prioridade, setPrioridade] = useState(enums.Prioridade.NORMAL)
 
-  const cadastrarTarefa = (evento: FormEvent) => {
+  const cadastrarContato = (evento: FormEvent) => {
     evento.preventDefault()
     dispatch(
       cadastrar({
@@ -29,8 +29,8 @@ const Formulario = () => {
 
   return (
     <MainContainer>
-      <Titulo>Nova tarefa</Titulo>
-      <Form onSubmit={cadastrarTarefa}>
+      <Titulo>Novo Contato</Titulo>
+      <Form onSubmit={cadastrarContato}>
         <Campo
           value={titulo}
           onChange={({ target }) => setTitulo(target.value)}
@@ -43,7 +43,7 @@ const Formulario = () => {
           onChange={({ target }) => setDescricao(target.value)}
           as="textarea"
           style={{ fontSize: 14 }}
-          placeholder="Descrição da tarefa"
+          placeholder="Descrição do contato"
         />
         <Opcoes>
           <p>Prioridade</p>

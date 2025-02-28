@@ -1,31 +1,31 @@
 import { useSelector } from 'react-redux'
-import Tarefa from '../../components/Tarefa'
+import Contato from '../../components/Contato'
 import { MainContainer, Titulo } from '../../styles'
 import { RootReducer } from '../../store'
 
-const ListaDeTarefas = () => {
-  const { itens } = useSelector((state: RootReducer) => state.tarefas)
+const ListaDeContatos = () => {
+  const { itens } = useSelector((state: RootReducer) => state.contatos)
   const { termo, criterio, valor } = useSelector(
     (state: RootReducer) => state.filtro
   )
 
-  const filtraTarefas = () => {
-    let tarefasFiltradas = itens
+  const filtraContatos = () => {
+    let cotatosFiltrados = itens
     if (termo !== undefined) {
-      tarefasFiltradas = tarefasFiltradas.filter(
+      cotatosFiltrados = cotatosFiltrados.filter(
         (item) => item.titulo.toLowerCase().search(termo.toLowerCase()) >= 0
       )
 
       if (criterio === 'prioridade') {
-        tarefasFiltradas = tarefasFiltradas.filter(
+        cotatosFiltrados = cotatosFiltrados.filter(
           (item) => item.prioridade === valor
         )
       } else if (criterio === 'status') {
-        tarefasFiltradas = tarefasFiltradas.filter(
+        cotatosFiltrados = cotatosFiltrados.filter(
           (item) => item.status === valor
         )
       }
-      return tarefasFiltradas
+      return cotatosFiltrados
     } else {
       return itens
     }
@@ -37,29 +37,29 @@ const ListaDeTarefas = () => {
       termo !== undefined && termo.length > 0 ? `e "${termo}"` : ''
 
     if (criterio === 'todas') {
-      mensagem = `${quantidade} tarefa(s) encontrada(s)`
+      mensagem = `${quantidade} contato(s) encontrado(s)`
     } else {
-      mensagem = `${quantidade} tarefa(s) encontrada(s) com ${`${criterio} ${valor}`} ${complementacao}`
+      mensagem = `${quantidade} contato(s) encontrado(s) com ${`${criterio} ${valor}`} ${complementacao}`
     }
 
     return mensagem
   }
 
-  const tarefas = filtraTarefas()
-  const mensagem = exibeResultadoFiltragem(tarefas.length)
+  const contatos = filtraContatos()
+  const mensagem = exibeResultadoFiltragem(contatos.length)
 
   return (
     <MainContainer>
       <Titulo as="p">{mensagem}</Titulo>
       <ul>
-        {tarefas.map((t) => (
-          <li key={t.titulo}>
-            <Tarefa
-              id={t.id}
-              descricao={t.descricao}
-              titulo={t.titulo}
-              status={t.status}
-              prioridade={t.prioridade}
+        {contatos.map((c) => (
+          <li key={c.titulo}>
+            <Contato
+              id={c.id}
+              descricao={c.descricao}
+              titulo={c.titulo}
+              status={c.status}
+              prioridade={c.prioridade}
             />
           </li>
         ))}
@@ -68,4 +68,4 @@ const ListaDeTarefas = () => {
   )
 }
 
-export default ListaDeTarefas
+export default ListaDeContatos
