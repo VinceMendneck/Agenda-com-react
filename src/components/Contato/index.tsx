@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as S from './styles'
 import { remover, editar } from '../../store/reducers/contatos'
@@ -31,6 +31,25 @@ const Contato = ({
     if (telefoneOriginal) setTelefone(telefoneOriginal)
     if (etiquetaOriginal) setEtiqueta(etiquetaOriginal)
   }, [nomeOriginal, emailOriginal, telefoneOriginal, etiquetaOriginal])
+
+  // Função para formatar o telefone com máscara
+  const formatarTelefone = (valor: string) => {
+    const apenasNumeros = valor.replace(/\D/g, '')
+    if (apenasNumeros.length <= 2) return apenasNumeros
+    if (apenasNumeros.length <= 7)
+      return `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2)}`
+    return `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(
+      2,
+      7
+    )}-${apenasNumeros.slice(7, 11)}`
+  }
+
+  // Função para lidar com a mudança no campo de telefone
+  const handleTelefoneChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const valor = e.target.value
+    const telefoneFormatado = formatarTelefone(valor)
+    setTelefone(telefoneFormatado)
+  }
 
   // Cancela a edição e restaura os valores originais
   function cancelarEdicao() {
@@ -67,8 +86,9 @@ const Contato = ({
       <S.Descricao
         disabled={!estaEditando}
         value={telefone}
-        onChange={(evento) => setTelefone(evento.target.value)}
+        onChange={handleTelefoneChange} // Aplica a máscara ao editar
         placeholder="Telefone"
+        maxLength={15} // Limita ao formato (XX) XXXXX-XXXX
       />
       <S.Descricao
         disabled={!estaEditando}
